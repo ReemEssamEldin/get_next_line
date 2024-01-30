@@ -1,6 +1,6 @@
-#include <fcntl.h>
-#include <stdio.h>
 #include "get_next_line.h"
+#include <stdio.h>
+#include <fcntl.h>
 
 int	main(void)
 {
@@ -19,12 +19,12 @@ int	main(void)
 	{
 		line = get_next_line(fd);
 		if (line == NULL)
-			break;
+			break ;
 		count++;
-		printf("[%d]:%s\n", count, line); //count is to show the line numbers
-		free(line);
+		printf("[%d]:%s\n", count, line);
+		free (line);
 		line = NULL;
 	}
-	close(fd);
-	return(0);
+	close (fd);
+	return (0);
 }
