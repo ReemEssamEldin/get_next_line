@@ -17,13 +17,16 @@
 # include <stdio.h>
 
 void	*ft_calloc(size_t count, size_t size);
-void	ft_bzero(void *s, size_t n);
+void	*ft_memset(void *s, int c, size_t n);
 char	*ft_strchr(const char *s, int c);
 char	*ft_strjoin(char const *s1, char const *s2);
+size_t	ft_strlen(const char *str);
+char	*append_buffer(char *basin_buffer, char *read_buffer);
+char	*extract_line(char *basin_buffer);
+char	*obtain_remaining(char *basin_buffer);
 void	print_newline_helper(char *buffer);
 char	*read_from_file(int fd);
 char	*get_next_line(int fd);
-char	*append_buffer(char *basin_buffer, char *read_buffer);
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 3

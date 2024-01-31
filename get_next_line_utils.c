@@ -14,27 +14,31 @@
 
 void	*ft_calloc(size_t count, size_t size)
 {
-	void	*alloc;
+	void	*ptr;
+	size_t	space;
 
-	alloc = malloc(count * size);
-	if (alloc == NULL)
+	space = count * size;
+	if (count && (size != (space / count)))
 		return (NULL);
-	ft_bzero(alloc, count * size);
-	return (alloc);
+	ptr = (void *)malloc(space);
+	if (!ptr)
+		return (NULL);
+	ft_memset(ptr, 0, space);
+	return (ptr);
 }
 
-void	ft_bzero(void *s, size_t n)
+void	*ft_memset(void *s, int c, size_t n)
 {
-	size_t	count;
-	char	*str;
+	unsigned char	*s1;
+	char			c1;
 
-	str = s;
-	count = 0;
-	while (count != n)
+	s1 = (unsigned char *) s;
+	c1 = (char) c;
+	while (n--)
 	{
-		str[count] = '\0';
-		count++;
+		*s1++ = c1;
 	}
+	return (s);
 }
 
 char	*ft_strchr(const char *s, int c)
@@ -47,9 +51,7 @@ char	*ft_strchr(const char *s, int c)
 	while (s[i] != '\0')
 	{
 		if (s[i] == temp_c)
-		{
 			return ((char *)&s[i]);
-		}
 		i++;
 	}
 	if (s[i] == temp_c)
@@ -61,12 +63,31 @@ char	*ft_strchr(const char *s, int c)
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {
-	char	*new_str;
+	int		total_len;
+	char	*s3;
+	int		i;
 
-	new_str = (char *)malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
-	if (new_str == NULL)
+	if (!s1 || !s2)
 		return (NULL);
-	ft_memcpy(new_str, s1, ft_strlen(s1));
-	ft_memcpy(new_str + ft_strlen(s1), s2, ft_strlen(s2) + 1);
-	return (new_str);
+	total_len = ft_strlen(s1) + ft_strlen(s2);
+	s3 = malloc((sizeof(char) * total_len) + 1);
+	if (!s3)
+		return (NULL);
+	i = 0;
+	while (*s1)
+		s3[i++] = *s1++;
+	while (*s2)
+		s3[i++] = *s2++;
+	s3[i] = '\0';
+	return (s3);
+}
+
+size_t	ft_strlen(const char *str)
+{
+	size_t	i;
+
+	i = 0;
+	while (str[i] != '\0')
+		i++;
+	return (i);
 }
