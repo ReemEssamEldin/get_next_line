@@ -109,13 +109,11 @@ void	print_newline_helper(char *buffer)
 	}
 }
 
-char	*read_from_file(int fd)
+char	*read_from_file(char *basin_buffer, int fd)
 {
 	int		bytes_read;
 	char	*cup_buffer;
-	char	*basin_buffer;
 
-	basin_buffer = NULL;
 	cup_buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
 	if (cup_buffer == NULL)
 		return (NULL);
@@ -154,14 +152,13 @@ char	*get_next_line(int fd)
 		return (NULL);
 	if (!basin_buffer)
 	{
-		basin_buffer = ft_calloc(1, sizeof(char));
+		basin_buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
 		if (!basin_buffer)
 			return (NULL);
 	}
 	if (!ft_strchr(basin_buffer, '\n'))
 	{
-		free(basin_buffer);
-		basin_buffer = read_from_file(fd);
+		basin_buffer = read_from_file(basin_buffer, fd);
 	}
 	if (!basin_buffer)
 		return (NULL);
