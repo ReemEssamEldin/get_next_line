@@ -159,7 +159,10 @@ char	*get_next_line(int fd)
 			return (NULL);
 	}
 	if (!ft_strchr(basin_buffer, '\n'))
+	{
+		free(basin_buffer);
 		basin_buffer = read_from_file(fd);
+	}
 	if (!basin_buffer)
 		return (NULL);
 	line = extract_line(basin_buffer);
