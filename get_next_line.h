@@ -12,9 +12,9 @@
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
-# include <unistd.h>
-# include <stdlib.h>
 # include <stdio.h>
+# include <stdlib.h>
+# include <unistd.h>
 
 void	*ft_calloc(size_t count, size_t size);
 void	*ft_memset(void *s, int c, size_t n);
@@ -25,11 +25,11 @@ char	*append_buffer(char *basin_buffer, char *read_buffer);
 char	*extract_line(char *basin_buffer);
 char	*obtain_remaining(char *basin_buffer);
 void	print_newline_helper(char *buffer);
-char	*read_from_file(int fd);
+char	*read_from_file(char *basin_buffer, int fd);
 char	*get_next_line(int fd);
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 3
+#  define BUFFER_SIZE 42
 # endif
 
 #endif
