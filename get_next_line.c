@@ -16,8 +16,6 @@
 /* and return each fish (line) one at a time without disturbing            */
 /* the rest of the aquarium (file) and avoiding reading the entire file    */
 /* at once. The explorer also handles edge cases and errors elegantly.     */
-/* print_newline_helper:                                                   */
-/* It's a function to convert and print the newline character as?          */
 /* *read_from_file:                                                        */
 /* Function to read data from the file and append it to partial content.   */
 /* *get_next_line:                                                         */
@@ -86,8 +84,6 @@ char	*obtain_remaining(char *basin_buffer)
 	}
 	remaining = (char *)ft_calloc(ft_strlen(basin_buffer) - i + 1,
 			sizeof(char));
-	if (!remaining)
-		return (NULL);
 	i++;
 	while (basin_buffer[i])
 		remaining[j++] = basin_buffer[i++];
@@ -96,48 +92,27 @@ char	*obtain_remaining(char *basin_buffer)
 	return (remaining);
 }
 
-void	print_newline_helper(char *buffer)
-{
-	while (*buffer && *buffer != '\0')
-	{
-		if (*buffer == '\n')
-		{
-			*buffer = '\\';
-		}
-		printf("%c", *buffer);
-		buffer++;
-	}
-}
-
 char	*read_from_file(char *basin_buffer, int fd)
 {
 	int		bytes_read;
 	char	*cup_buffer;
 
 	cup_buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
-	if (cup_buffer == NULL)
-		return (NULL);
-	while ((bytes_read = read(fd, cup_buffer, BUFFER_SIZE)) > 0)
+	while (1)
 	{
+		bytes_read = read(fd, cup_buffer, BUFFER_SIZE);
+		if (bytes_read <= 0)
+			break ;
 		cup_buffer[bytes_read] = '\0';
 		basin_buffer = append_buffer(basin_buffer, cup_buffer);
 		if (ft_strchr(basin_buffer, '\n'))
 			break ;
 	}
 	free(cup_buffer);
-	if (bytes_read == -1)
+	if (bytes_read < 0 || (bytes_read == 0 && (!basin_buffer
+				|| !*basin_buffer)))
 	{
-		if (basin_buffer != NULL)
-		{
-			free(basin_buffer);
-		}
-		return (NULL);
-	}
-	else if (bytes_read == 0 && (basin_buffer == NULL
-			|| basin_buffer[0] == '\0'))
-	{
-		if (basin_buffer != NULL)
-			free(basin_buffer);
+		free(basin_buffer);
 		return (NULL);
 	}
 	return (basin_buffer);
@@ -158,15 +133,9 @@ char	*get_next_line(int fd)
 		return (NULL);
 	}
 	if (!basin_buffer)
-	{
 		basin_buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
-		if (!basin_buffer)
-			return (NULL);
-	}
 	if (!ft_strchr(basin_buffer, '\n'))
-	{
 		basin_buffer = read_from_file(basin_buffer, fd);
-	}
 	if (!basin_buffer)
 		return (NULL);
 	line = extract_line(basin_buffer);

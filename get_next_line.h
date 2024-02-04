@@ -24,7 +24,6 @@ size_t	ft_strlen(const char *str);
 char	*append_buffer(char *basin_buffer, char *read_buffer);
 char	*extract_line(char *basin_buffer);
 char	*obtain_remaining(char *basin_buffer);
-void	print_newline_helper(char *buffer);
 char	*read_from_file(char *basin_buffer, int fd);
 char	*get_next_line(int fd);
 
