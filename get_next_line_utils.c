@@ -61,39 +61,12 @@ char	*ft_strchr(const char *s, int c)
 	return (NULL);
 }
 
-char	*ft_strdup(const char *src)
-{
-	int		i;
-	char	*res;
-
-	i = 0;
-	while (src[i])
-		i++;
-	res = (char *)malloc(sizeof(*res) * i + 1);
-	if (res == NULL)
-		return (NULL);
-	i = 0;
-	while (src[i])
-	{
-		res[i] = src[i];
-		i++;
-	}
-	res[i] = '\0';
-	return (res);
-}
-
 char	*ft_strjoin(char const *s1, char const *s2)
 {
 	int		total_len;
 	char	*s3;
 	int		i;
 
-	if (!s1 && !s2)
-		return (NULL);
-	else if (!s1)
-		return (ft_strdup(s2));
-	else if (!s2)
-		return (ft_strdup(s1));
 	total_len = ft_strlen(s1) + ft_strlen(s2);
 	s3 = malloc((sizeof(char) * total_len) + 1);
 	i = 0;
