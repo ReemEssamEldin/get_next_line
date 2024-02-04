@@ -1,0 +1,21 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "build code",
+			"type": "shell",
+			"command": "gcc",
+			"args": [
+				"-g",
+				"main.c",
+				"get_next_line.c",
+				"get_next_line.h",
+				"get_next_line_utils.c"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		}
+	]
+}
