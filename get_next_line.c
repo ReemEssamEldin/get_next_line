@@ -36,7 +36,7 @@ char	*append_buffer(char *basin_buffer, char *read_buffer)
 	char	*temp;
 
 	temp = ft_strjoin(basin_buffer, read_buffer);
-	free (basin_buffer);
+	free(basin_buffer);
 	return (temp);
 }
 
@@ -84,14 +84,15 @@ char	*obtain_remaining(char *basin_buffer)
 		free(basin_buffer);
 		return (NULL);
 	}
-	remaining = (char *)ft_calloc(ft_strlen(basin_buffer) - i + 1, sizeof(char));
+	remaining = (char *)ft_calloc(ft_strlen(basin_buffer) - i + 1,
+			sizeof(char));
 	if (!remaining)
 		return (NULL);
 	i++;
 	while (basin_buffer[i])
 		remaining[j++] = basin_buffer[i++];
 	remaining[j] = '\0';
-	free (basin_buffer);
+	free(basin_buffer);
 	return (remaining);
 }
 
@@ -110,12 +111,12 @@ void	print_newline_helper(char *buffer)
 
 char	*read_from_file(int fd)
 {
-	int			bytes_read;
-	char		*cup_buffer;
-	char		*basin_buffer;
+	int		bytes_read;
+	char	*cup_buffer;
+	char	*basin_buffer;
 
 	basin_buffer = NULL;
-	cup_buffer = ft_calloc (BUFFER_SIZE + 1, sizeof(char));
+	cup_buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
 	if (cup_buffer == NULL)
 		return (NULL);
 	while ((bytes_read = read(fd, cup_buffer, BUFFER_SIZE)) > 0)
@@ -125,21 +126,22 @@ char	*read_from_file(int fd)
 		if (ft_strchr(basin_buffer, '\n'))
 			break ;
 	}
-	free (cup_buffer);
+	free(cup_buffer);
 	if (bytes_read == -1)
 	{
 		if (basin_buffer != NULL)
 		{
 			free(basin_buffer);
-        }
+		}
 		return (NULL);
-    }
-	else if (bytes_read == 0 && (basin_buffer == NULL || basin_buffer[0] == '\0'))
+	}
+	else if (bytes_read == 0 && (basin_buffer == NULL
+			|| basin_buffer[0] == '\0'))
 	{
 		if (basin_buffer != NULL)
 			free(basin_buffer);
-        return (NULL);
-    }
+		return (NULL);
+	}
 	return (basin_buffer);
 }
 
@@ -147,14 +149,15 @@ char	*get_next_line(int fd)
 {
 	static char	*basin_buffer;
 	char		*line;
-	
+
 	if (fd < 0 || read(fd, NULL, 0) < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	if (!basin_buffer){
-		basin_buffer = ft_calloc(1, sizeof (char));
+	if (!basin_buffer)
+	{
+		basin_buffer = ft_calloc(1, sizeof(char));
 		if (!basin_buffer)
-            return (NULL);
-        }
+			return (NULL);
+	}
 	if (!ft_strchr(basin_buffer, '\n'))
 		basin_buffer = read_from_file(fd);
 	if (!basin_buffer)
