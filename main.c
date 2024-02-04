@@ -26,5 +26,6 @@ int	main(void)
 		line = NULL;
 	}
 	close (fd);
+	// fscanf(stdin, "c"); // wait for user to enter input from keyboard
 	return (0);
 }
