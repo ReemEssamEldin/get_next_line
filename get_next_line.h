@@ -29,7 +29,7 @@ char	*read_from_file(char *basin_buffer, int fd);
 char	*get_next_line(int fd);
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 42
+#  define BUFFER_SIZE 10
 # endif
 
 #endif

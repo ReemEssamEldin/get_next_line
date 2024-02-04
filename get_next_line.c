@@ -149,7 +149,14 @@ char	*get_next_line(int fd)
 	char		*line;
 
 	if (fd < 0 || read(fd, NULL, 0) < 0 || BUFFER_SIZE <= 0)
+	{
+		if (basin_buffer)
+		{
+			free(basin_buffer);
+			basin_buffer = NULL;
+		}
 		return (NULL);
+	}
 	if (!basin_buffer)
 	{
 		basin_buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
