@@ -1,0 +1,119 @@
+Let's walk through an example using the file "example.txt" with the following content:
+
+		Hello World!
+		This is a test file.
+		End of file.
+
+Here's a detailed step-by-step walkthrough of what happens when the `main` function is called:
+
+1.Initialization in `main` function:
+	* The file "example.txt" is opened for reading, and the file descriptor is stored in `fd`.
+	* A variable `count` is initialized to keep track of the line numbers.
+2.Reading the file line by line:
+	* The `while` loop begins, and `get_next_line(fd)` is called for the first time.
+3.Inside `get_next_line` function:
+	* Checks are performed to ensure `fd` is valid, `read(fd, NULL, 0)` doesn't return an error,
+	and `BUFFER_SIZE` is positive.
+	* If `basin_buffer` is not already initialized (it's `NULL` the first time), 
+	it's allocated `BUFFER_SIZE + 1` bytes and initialized with zeros using `ft_calloc`.
+	* If there's no newline (`\n`) in `basin_buffer`, `read_from_file` is called to read from the file.
+4.Inside `read_from_file` function:
+	* A buffer `cup_buffer` is allocated `BUFFER_SIZE + 1` bytes and initialized with zeros.
+	* The file is read into `cup_buffer` in chunks of `BUFFER_SIZE` bytes until a newline is encountered 
+	or there are no more bytes to read.
+	* After each read, `cup_buffer` is appended to `basin_buffer` using `append_buffer`.
+	* For our example, let's assume `BUFFER_SIZE` is large enough to read the whole file in one go.
+	The `basin_buffer` after reading the file will be:
+
+		Hello World!\nThis is a test file.\nEnd of file.
+
+	* The loop breaks because a newline is encountered.
+5.Back in `get_next_line` function:
+	* The line is extracted from `basin_buffer` using `extract_line`.
+6.Inside `extract_line` function:
+	* The function finds the position of the first newline (if it exists) or the end of the string.
+	* It allocates enough memory for the line, copies characters up to the newline or end of the string,
+	and adds a null terminator.
+	* For our example, `line` will be `Hello World!\n`.
+7.Back in `get_next_line` function:
+	* The remaining part of `basin_buffer` is obtained using `obtain_remaining`.
+8.Inside `obtain_remaining` function:
+	* The function finds the part of `basin_buffer` after the extracted line.
+	* It allocates enough memory for the remaining part, copies the characters, and adds a null terminator.
+	* For our example, `basin_buffer` will be updated to:
+
+		This is a test file.\nEnd of file.
+
+	* The old `basin_buffer` is freed to prevent memory leaks.
+9.Back in `get_next_line` function:
+	* The extracted line `Hello World!\n` is returned to the `main` function.
+10.Back in `main` function:
+	* The returned line is printed with the line number `1`.
+	* The memory for `line` is freed.
+	* The loop continues, and `get_next_line` is called again.
+
+The process repeats for the remaining lines in the file until `get_next_line` returns `NULL`, 
+indicating the end of the file.
+The loop then breaks, the file descriptor is closed, and the program ends.
+
+The key part of this process is the interplay between `get_next_line`, `extract_line`, `obtain_remaining`, 
+and `read_from_file`.
+They work together to read from the file, manage the buffer, and extract lines efficiently, 
+handling memory and ensuring that each line, including the last one, is correctly processed and returned.
+
+----------------------------------------------------------------------------------------------------------------------
+
+Continuing from where the first call to `get_next_line` returned "Hello World!\n", 
+the `main` function is still in the loop, and `get_next_line` will be called again. Let's walk through the subsequent calls:
+
+11.Second call to `get_next_line` function:
+	* The validity checks for `fd` and `BUFFER_SIZE` are performed again.
+	* This time, `basin_buffer` is not empty; it contains:
+
+		This is a test file.\nEnd of file.
+
+	* The function checks if there's a newline (`\n`) in `basin_buffer`. 
+	There is, so it doesn't call `read_from_file` again.
+	* The line is extracted from `basin_buffer` using `extract_line`.
+12.Inside `extract_line` function:
+	* The function finds the first newline and extracts "This is a test file.\n".
+	* `basin_buffer` is now:
+
+      End of file.
+
+13.Back in `get_next_line` function:
+	* The remaining part of `basin_buffer` is obtained using `obtain_remaining`.
+14.Inside `obtain_remaining` function:
+	* The function updates `basin_buffer` to contain only "End of file.".
+	* The old `basin_buffer` is freed.
+15.Back in `main` function:
+	* The line "This is a test file.\n" is printed with the line number `2`.
+	* The memory for `line` is freed.
+	* The loop continues, and `get_next_line` is called again.
+16.Third call to `get_next_line` function:
+	* Similar checks are performed.
+	* `basin_buffer` now contains "End of file." without a newline at the end.
+	* The function realizes it's the end of the buffer and file, so it prepares to return the last line.
+	* `extract_line` is called to get the line "End of file.".
+17.Inside `extract_line` function:
+	* The function extracts "End of file." as there's no newline indicating further content.
+18.Back in `get_next_line` function:
+	* The remaining part of `basin_buffer` is obtained using `obtain_remaining`, 
+	but as there's no more content, `basin_buffer` is now set to `NULL`.
+19.Back in `main` function:
+	* The line "End of file." is printed with the line number `3`.
+	* The memory for `line` is freed.
+	* The loop attempts another `get_next_line` call.
+20.Fourth call to `get_next_line` function:
+	* `get_next_line` sees that `basin_buffer` is `NULL` and there's no more content to read from the file.
+	* It returns `NULL`.
+21.Back in `main` function:
+	* The loop breaks as `get_next_line` returned `NULL`.
+	* The file descriptor is closed with `close(fd)`.
+	* The program ends as it reaches the return statement in `main`.
+
+Throughout this process, the code ensures that memory is managed properly: buffers are allocated and freed appropriately, 
+and lines are read efficiently from the file, 
+respecting the `BUFFER_SIZE` and handling lines that span multiple buffer lengths or end right at the buffer's edge. 
+The static `basin_buffer` ensures that the state is maintained across multiple calls to `get_next_line`, 
+allowing the function to pick up right where it left off in the previous call.
